@@ -1,4 +1,9 @@
-const PostController = require('../controllers/userController');
+const { Router } = require('express');
 
-router.delete('/:id', PostController.deletePost);
+const PostController = require('../controllers/postController');
+
+router.post('/', PostController.createPost);
 router.put('/:id', PostController.updatePost);
+router.delete('/:id', PostController.deletePost);
+
+module.exports = router;
