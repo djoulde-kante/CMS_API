@@ -4,7 +4,7 @@ const AuthController = require('../controllers/authController');
 
 const router = Router();
 
-// Exemple de route d'inscription
+// Routes d'inscription
 router.post('/sign-up', AuthController.signUp);
 router.post('/sign-in', AuthController.signIn);
 router.post('/sign-out', AuthController.signOut);
