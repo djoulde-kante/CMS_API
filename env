@@ -1,0 +1,6 @@
+DATABASE_URL=postgresql://neondb_owner:npg_O2mitSbsD3kI@ep-sparkling-bush-ad11pi6p-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+
+PORT=5000
+
+SECRET_KEY=1234567890abcdef
+SECRET_KEY_EXPIRES_IN=1d
