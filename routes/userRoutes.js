@@ -16,9 +16,7 @@ router.put('/edit/:id', (req, res) => {
     // Logique pour mettre à jour un utilisateur par ID ici
     res.send(`Mise à jour de l'utilisateur avec l'ID ${req.params.id}`);
 });
-router.delete('/delete/:id', (req, res) => {
-    // Logique pour supprimer un utilisateur par ID ici
-    res.send(`Suppression de l'utilisateur avec l'ID ${req.params.id}`);
-});
+// route pour supprimer un utilisateur par ID
+
 
 module.exports = router;
