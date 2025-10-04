@@ -20,7 +20,8 @@ class PostController {
             if (!post) {
                 return res.status(404).json({ message: 'Post introuvable' });
             }
-        const { id } = req.params;}
+        const { id } = req.params;
+    }
         catch (error) {
             console.error('Erreur lors de la récupération du post :', error);
             res.status(500).json({ message: 'Erreur serveur' });
@@ -104,7 +105,7 @@ class PostController {
             if (!post) {
                 return res.status(404).json({ message: 'Post introuvable' });
             }
-            if (post.userId !== req.user.id) {
+            if (req.user.role !== 'admin' && post.authorId !== req.user.id) {
                 return res.status(403).json({ message: 'Vous n\'êtes pas autorisé à supprimer ce post' });
             }
             
