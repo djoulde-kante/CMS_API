@@ -5,9 +5,11 @@ const db = require('./config/config');
 
 // Import des routes
 const authRoutes = require('./routes/authRoutes');
+const postRoutes = require('./routes/postRoutes');
 
 // Import des modèles (pour s'assurer qu'ils sont enregistrés)
 require('./models/User');
+require('./models/Post');
 
 // Initialisation de l'application
 const app = express();
@@ -20,6 +22,7 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/posts', postRoutes);
 
 // Fonction pour démarrer le serveur
 const startServer = async () => {
