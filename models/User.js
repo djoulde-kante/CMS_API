@@ -25,9 +25,8 @@ const User = db.define('User', {
     }
 },
 role: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM('admin', 'editor', 'viewer'),
     allowNull: false,
-    enum: ['admin', 'editor', 'viewer'],
     defaultValue: 'viewer'
 },
     password: {

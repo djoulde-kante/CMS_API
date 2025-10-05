@@ -8,10 +8,10 @@ if (!process.env.DATABASE_URL) {
 const db = new sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
   dialectOptions: {
-    ssl: {
+    ssl: process.env.NODE_ENV === 'production' ? {
       require: true,
       rejectUnauthorized: false,
-    },
+    } : false,
   },
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
 });
