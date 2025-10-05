@@ -1,5 +1,6 @@
 
 const Post = require('../models/Post');
+const LogService = require('../services/logService');
 
 class PostController {
     // methode pour recuperer tous les posts
@@ -54,6 +55,9 @@ class PostController {
                 category
             });
 
+            // Création du log d'activité
+            await LogService.createLog(req.user.id, 'Create Post');
+
             res.status(201).json({ message: "Post créé avec succès", post: newPost });
 
         } catch (error) {
@@ -93,6 +97,9 @@ class PostController {
                 category: category || post.category,
             });
 
+            // Création du log d'activité
+            await LogService.createLog(req.user.id, 'Update Post');
+
             res.status(200).json({message: "Post modifié avec succès" ,post});
             console.log('Post modifié avec succès:', post);
         } catch (error) {
@@ -120,6 +127,10 @@ class PostController {
             
             // on supprime le post en base de donneees
             await post.destroy();
+
+            // Création du log d'activité
+            await LogService.createLog(req.user.id, 'Delete Post');
+
             res.status(200).json({ message: 'Post supprimé avec succes' });
         }   catch (error) { 
             console.error('Error de suppression du  post:', error);

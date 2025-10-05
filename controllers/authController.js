@@ -2,6 +2,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const LogService = require('../services/logService');
 
 class AuthController {
     // Inscription
@@ -25,6 +26,10 @@ class AuthController {
                 password: hashedPassword,
                 role: 'viewer'
             });
+
+            // Création du log d'activité (utilisateur créé)
+            await LogService.createLog(newUser.id, 'User SignUp');
+
             res.status(201).json({ message: 'Inscription réussie', user: newUser });
         } catch (error) {
             console.error('Erreur lors de l\'inscription :', error);
@@ -58,6 +63,10 @@ class AuthController {
                 process.env.SECRET_KEY,
                 { expiresIn: process.env.SECRET_KEY_EXPIRES_IN || '24h' }
             );
+
+            // Création du log d'activité (connexion réussie)
+            await LogService.createLog(user.id, 'User SignIn');
+
             res.status(200).json({ message: 'Connexion réussie', token });
         } catch (error) {
             console.error('Erreur lors de la connexion :', error);

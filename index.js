@@ -10,6 +10,8 @@ const swaggerSpec = require('./config/swagger');
 // Import des routes
 const authRoutes = require('./routes/authRoutes');
 const postRoutes = require('./routes/postRoutes');
+const userRoutes = require('./routes/userRoutes');
+const activityLogRoutes = require('./routes/activityLogRoutes');
 
 // Import des modèles (pour s'assurer qu'ils sont enregistrés)
 require('./models/User');
@@ -27,6 +29,8 @@ app.get('/', (req, res) => res.send('Hello World!'));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/activity-logs', activityLogRoutes);
 // Swagger UI route
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
