@@ -3,10 +3,10 @@ const Post = require('../models/Post');
 
 class PostController {
     // methode pour recuperer tous les posts
-    async getAllPosts(req, res)  {
+    static async getAllPosts(req, res)  {
         try {
             const posts = await Post.findAll();
-            res.status(200).json(posts); 
+            res.status(200).json({message: "Tous les post récupérés avec succès", posts}); 
         }
         catch (error) {
             console.error('Erreur lors de la récupération des posts :', error);
@@ -14,14 +14,15 @@ class PostController {
         };
     }
     // methode pour recuperer un post par son id
-        async getPostById(req, res) {
+        static async getPostById(req, res) {
         try {
+            const { id } = req.params;
             const post = await Post.findByPk(id);
             if (!post) {
                 return res.status(404).json({ message: 'Post introuvable' });
             }
-        const { id } = req.params;
-    }
+            res.status(200).json({message: 'Post recuperé avec succes', post });
+        }
         catch (error) {
             console.error('Erreur lors de la récupération du post :', error);
             res.status(500).json({ message: 'Erreur serveur' });
@@ -29,7 +30,7 @@ class PostController {
     }
 
     // Ajouter un post
-    async createPost(req, res) {
+    static async createPost(req, res) {
         try {
             const { title, description, image, tags, category } = req.body;
 
@@ -62,7 +63,7 @@ class PostController {
     }
 
     // Modifier un post
-    static async update(req, res) {
+    static async updatePost(req, res) {
 
         // Récupérer l'ID du post à modifier depuis les paramètres de l'URL
         const postId = req.params.id;
@@ -72,20 +73,27 @@ class PostController {
 
         // Vérifier si le post existe et le met à jour
         try {
-            const post = await Post.findByIdAndUpdate(postId, {
-                title,
-                description,
-                image,
-                authorId,
-                tags,
-                category
-            }, { new: true });
-
+            const post = await Post.findByPk(postId);
             if (!post) {
                 return res.status(404).json({ message: 'Post non trouvé' });
             }
 
-            res.status(200).json(post);
+            // Autorisation: l'auteur du post peut modifier
+            if (post.authorId !== req.user.id) {
+                return res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier ce post' });
+            }
+
+            // Mettre à jour les champs du post
+            post.update({
+                title: title || post.title,
+                description: description || post.description,
+                image: image || post.image,
+                authorId: authorId || post.authorId,
+                tags: tags || post.tags,
+                category: category || post.category,
+            });
+
+            res.status(200).json({message: "Post modifié avec succès" ,post});
             console.log('Post modifié avec succès:', post);
         } catch (error) {
             console.error('Erreur de modification:', error);
@@ -95,7 +103,7 @@ class PostController {
     
 
     // ajout de la methode de suppression d'un post 
-         async deletePost(req,res){
+        static async deletePost(req,res){
 
         // on recupere l'id du post a supprimer
         const {id} = req.params;
@@ -105,13 +113,13 @@ class PostController {
             if (!post) {
                 return res.status(404).json({ message: 'Post introuvable' });
             }
-            if (req.user.role !== 'admin' && post.authorId !== req.user.id) {
+            if ( post.authorId !== req.user.id) {
                 return res.status(403).json({ message: 'Vous n\'êtes pas autorisé à supprimer ce post' });
             }
             
             // on supprime le post en base de donneees
             await post.destroy();
-            res.status(200).json({ message: 'Post supprimer avec succes' });
+            res.status(200).json({ message: 'Post supprimé avec succes' });
         }   catch (error) { 
             console.error('Error de suppression du  post:', error);
             res.status(500).json({ message: 'Internal server error' });

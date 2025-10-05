@@ -49,10 +49,14 @@ class AuthController {
             }
 
             // Générer un token JWT
+            if (!process.env.SECRET_KEY) {
+                return res.status(500).json({ message: 'Clé secrète non définie dans les variables d\'environnement' });
+            }
+
             const token = jwt.sign(
                 { id: user.id, email: user.email, role: user.role },
                 process.env.SECRET_KEY,
-                { expiresIn: process.env.SECRET_KEY_EXPIRES_IN || '1d' }
+                { expiresIn: process.env.SECRET_KEY_EXPIRES_IN || '24h' }
             );
             res.status(200).json({ message: 'Connexion réussie', token });
         } catch (error) {

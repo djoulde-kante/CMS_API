@@ -28,9 +28,9 @@ const Post = db.define('Post', {
         allowNull: false,   
     },
     category:{
-        type: DataTypes.STRING,
-        allowNull: false, 
-        enum: ['technology', 'health', 'finance', 'education', 'entertainment', 'travel', 'lifestyle', 'food', 'sports', 'news'],
+        type: DataTypes.ENUM('technology', 'health', 'finance', 'education', 'entertainment', 'travel', 'lifestyle', 'food', 'sports', 'news'),
+        allowNull: false,
+        defaultValue: 'news'
     },
     createdAt: {
         type: DataTypes.DATE,
