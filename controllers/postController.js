@@ -6,7 +6,7 @@ class PostController {
     static async getAllPosts(req, res)  {
         try {
             const posts = await Post.findAll();
-            res.status(200).json(posts); 
+            res.status(200).json({message: "Tous les post récupérés avec succès", posts}); 
         }
         catch (error) {
             console.error('Erreur lors de la récupération des posts :', error);
@@ -21,7 +21,7 @@ class PostController {
             if (!post) {
                 return res.status(404).json({ message: 'Post introuvable' });
             }
-            res.status(200).json({message: 'Post recuperer avec succes', post });
+            res.status(200).json({message: 'Post recuperé avec succes', post });
         }
         catch (error) {
             console.error('Erreur lors de la récupération du post :', error);
@@ -35,9 +35,9 @@ class PostController {
             const { title, description, image, tags, category } = req.body;
 
             // Vérifier que l’utilisateur est connecté (req.user vient du middleware auth)
-            // if (!req.user) {
-            //     return res.status(401).json({ message: "Non autorisé. Veuillez vous connecter." });
-            // }
+            if (!req.user) {
+                return res.status(401).json({ message: "Non autorisé. Veuillez vous connecter." });
+            }
 
             // Vérifier si l'utilisateur a le rôle admin ou editor
             if (req.user.role !== "admin" && req.user.role !== "editor") {
@@ -88,7 +88,7 @@ class PostController {
                 category: category || post.category,
             });
 
-            res.status(200).json(post);
+            res.status(200).json({message: "Post modifié avec succès" ,post});
             console.log('Post modifié avec succès:', post);
         } catch (error) {
             console.error('Erreur de modification:', error);
@@ -115,7 +115,7 @@ class PostController {
             
             // on supprime le post en base de donneees
             await post.destroy();
-            res.status(200).json({ message: 'Post supprimer avec succes' });
+            res.status(200).json({ message: 'Post supprimé avec succes' });
         }   catch (error) { 
             console.error('Error de suppression du  post:', error);
             res.status(500).json({ message: 'Internal server error' });
