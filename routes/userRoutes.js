@@ -15,32 +15,6 @@ const authMiddleware = require('../middleware/auth');
 
 /**
  * @swagger
- * /api/users/sign-up:
- *   post:
- *     tags: [Users]
- *     summary: Crée un nouvel utilisateur (inscription)
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       201:
- *         description: Utilisateur créé
- */
-router.post('/sign-up', UserController.signUp);
-
-// Routes protégées
-/**
- * @swagger
  * /api/users:
  *   get:
  *     tags: [Users]

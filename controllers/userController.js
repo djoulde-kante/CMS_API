@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const LogService = require('../services/logService');
 
 function sanitizeUser(userInstance) {
   if (!userInstance) return null;
@@ -9,26 +10,7 @@ function sanitizeUser(userInstance) {
 }
 
 class UserController {
-  // Inscription (réutilisable ou redondant avec authController)
-  static async signUp(req, res) {
-    const { firstName, lastName, email, password } = req.body;
-    if (!firstName || !lastName || !email || !password) {
-      return res.status(400).json({ message: 'Champs requis manquants' });
-    }
-    try {
-      const existing = await User.findOne({ where: { email } });
-      if (existing) return res.status(400).json({ message: 'Utilisateur déjà existant' });
-
-      const hashed = await bcrypt.hash(password, 10);
-      const created = await User.create({ firstName, lastName, email, password: hashed, role: 'viewer' });
-      return res.status(201).json({ message: 'Inscription réussie', user: sanitizeUser(created) });
-    } catch (err) {
-      console.error('Erreur signUp userController:', err);
-      return res.status(500).json({ message: 'Erreur serveur' });
-    }
-  }
-
-  static async getAllUsers(req, res) {
+ static async getAllUsers(req, res) {
     try {
       const users = await User.findAll({ attributes: { exclude: ['password'] } });
       return res.status(200).json(users);
@@ -70,6 +52,10 @@ class UserController {
       if (password) updates.password = await bcrypt.hash(password, 10);
 
       await user.update(updates);
+
+      // Création du log d'activité
+      await LogService.createLog(req.user.id, 'Update User');
+      
       return res.status(200).json({ message: 'Utilisateur mis à jour', user: sanitizeUser(user) });
     } catch (err) {
       console.error('Erreur updateUser:', err);
@@ -89,6 +75,10 @@ class UserController {
       if (!user) return res.status(404).json({ message: 'Utilisateur introuvable' });
 
       await user.destroy();
+
+      // Création du log d'activité
+      await LogService.createLog(req.user.id, 'Delete User');
+
       return res.status(200).json({ message: 'Utilisateur supprimé' });
     } catch (err) {
       console.error('Erreur deleteUser:', err);
@@ -117,6 +107,10 @@ class UserController {
       if (!user) return res.status(404).json({ message: 'Utilisateur introuvable' });
 
       await user.update({ role });
+
+      // Création du log d'activité
+      await LogService.createLog(req.user.id, 'Change User Role');
+
       return res.status(200).json({ message: 'Rôle mis à jour', user: sanitizeUser(user) });
     } catch (err) {
       console.error('Erreur changeUserRole:', err);
