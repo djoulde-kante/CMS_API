@@ -1,6 +1,6 @@
 
 const Post = require('../models/Post');
-const LogService = require('../services/logService');
+const LogService = require('../services/LogService');
 
 class PostController {
     // methode pour recuperer tous les posts

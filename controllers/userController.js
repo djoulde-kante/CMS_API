@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
-const LogService = require('../services/logService');
+const LogService = require('../services/LogService');
 
 function sanitizeUser(userInstance) {
   if (!userInstance) return null;
