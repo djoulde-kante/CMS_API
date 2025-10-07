@@ -120,7 +120,7 @@ class PostController {
             if (!post) {
                 return res.status(404).json({ message: 'Post introuvable' });
             }
-            if ( post.authorId !== req.user.id) {
+            if (post.authorId !== req.user.id) {
                 return res.status(403).json({ message: 'Vous n\'êtes pas autorisé à supprimer ce post' });
             }
             
