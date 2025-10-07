@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
-const LogService = require('../services/logService');
+const LogService = require('../services/LogService');
 
 class AuthController {
     // Inscription
